@@ -1,10 +1,18 @@
 // src/components/Navbar.tsx
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { resetMenu } from '@/services/menuService';
+import { menuDummy, initialFetch } from '@/services/menuService';
+import { useContext } from 'react';
+import { menuContext } from '@/providers/MenuProvider';
 
 const Navbar: React.FC = () => {
     const router = useRouter();
+    const {setMenuList} = useContext(menuContext)
+
+    const handleReset = () => {
+        initialFetch();
+        setMenuList?.(menuDummy)
+    }
 
     const isActive = (pathname: string) => {
         //-------- Style for navigation -------- 
@@ -43,7 +51,7 @@ const Navbar: React.FC = () => {
                         className={isActive('/kasir')}>Kasir</Link>
                 </div>
                 <button
-                    onClick={resetMenu}
+                    onClick={handleReset}
                     className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-[100px]"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                         className="mr-2">

@@ -1,24 +1,17 @@
 import { useContext, useEffect, useState } from "react"
-import { resetMenu } from "@/services/menuService";
+import { getLocalStorageMenu } from "@/services/menuService";
 import { menuContext } from "@/providers/MenuProvider";
+import { TMenuList } from "@/types/menuTypes";
 import MenuList from "@/components/MenuList";
 
-interface MenuList {
-    id: string;
-    name: string;
-}
 
 export default function MenuTable() {
     const [newMenu, setNewMenu] = useState<string>("");
-    const {menuList, setMenuList} = useContext(menuContext);
+    const { menuList, setMenuList } = useContext(menuContext);
 
     const fetchMenus = () => {
-        if (!localStorage.getItem("menus")) {
-            resetMenu();
-        }
-        const storedData = localStorage.getItem("menus");
-        const menus: MenuList[] = storedData ? JSON.parse(storedData) : [];
-        setMenuList(menus);
+        const menus = getLocalStorageMenu()
+        setMenuList?.(menus);
     };
 
     const inputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,8 +21,8 @@ export default function MenuTable() {
     const newMenuSubmitted = (event: any) => {
         event.preventDefault();
         const storedData = localStorage.getItem("menus");
-        const menus: MenuList[] = storedData ? JSON.parse(storedData) : [];
-        const payload: MenuList = {
+        const menus: TMenuList[] = storedData ? JSON.parse(storedData) : [];
+        const payload: TMenuList = {
             id: String(Math.floor(100000 + Math.random() * 900000)),
             name: newMenu,
         };
@@ -40,7 +33,7 @@ export default function MenuTable() {
     };
 
     const deleteMenu = (id: string) => {
-        const filteredMenu = menuList.filter(menu => menu.id !== id)
+        const filteredMenu = menuList?.filter(menu => menu.id !== id)
         localStorage.setItem("menus", JSON.stringify(filteredMenu))
         fetchMenus();
     }
@@ -97,8 +90,8 @@ export default function MenuTable() {
                                     </tr>
                                 </thead>
                                 <tbody className="[&amp;_tr:last-child]:border-0">
-                                    {menuList.map(menu => (
-                                        <MenuList key={menu.id} id={menu.id} name={menu.name} deleteMenu={deleteMenu}/>
+                                    {menuList?.map(menu => (
+                                        <MenuList key={menu.id} id={menu.id} name={menu.name} deleteMenu={deleteMenu} />
                                     ))}
                                 </tbody>
                             </table>

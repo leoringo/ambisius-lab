@@ -3,7 +3,15 @@ export const menuDummy = [
     { id: "362342", name: "Nasi Goreng Spesial" },
 ];
 
-export const resetMenu = () => {
+export const initialFetch = () => {
     localStorage.clear()
     localStorage.setItem("menus", JSON.stringify(menuDummy));
+}
+
+export const getLocalStorageMenu = () => {
+    if (!localStorage.getItem("menus")) {
+        initialFetch();
+    }
+    const storedData = localStorage.getItem("menus");
+    return storedData ? JSON.parse(storedData) : [];
 }
