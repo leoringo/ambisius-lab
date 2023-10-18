@@ -1,51 +1,52 @@
 import { useEffect, useState } from "react"
+import { resetMenu } from "@/services/menuService";
 import MenuList from "@/components/MenuList";
 
-interface menuList {
+interface MenuList {
     id: string;
     name: string;
 }
 
-export default function CardSandbox() {
-    const [newMenu, setNewMenu] = useState<string>("")
-    const [menuList, setMenuList] = useState<menuList[]>([])
+export default function MenuTable() {
+    const [newMenu, setNewMenu] = useState<string>("");
+    const [menuList, setMenuList] = useState<MenuList[]>([]);
 
-    const menu = [
-        { "id": "996756", "name": "Ayam Kecap Manis" },
-        { "id": "362342", "name": "Nasi Goreng Spesial" }
-    ]
-
-    const setLocalStorage = () => {
-        if (!localStorage.getItem('menus')) {
-            localStorage.setItem('menus', JSON.stringify(menu))
+    const fetchMenus = () => {
+        if (!localStorage.getItem("menus")) {
+            resetMenu();
         }
-
-        if (!menuList) {
-            const storedData = localStorage.getItem('menus')
-            const menus: menuList[] = storedData ? JSON.parse(storedData) : []
-            setMenuList(menus)
-        }
-    }
+        const storedData = localStorage.getItem("menus");
+        const menus: MenuList[] = storedData ? JSON.parse(storedData) : [];
+        setMenuList(menus);
+    };
 
     const inputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setNewMenu(event.target.value)
-    }
+        setNewMenu(event.target.value);
+    };
 
     const newMenuSubmitted = (event: any) => {
-        event.preventDefault()
-        const storedData = localStorage.getItem('menus')
-        const menus: menuList[] = storedData ? JSON.parse(storedData) : []
-        const payload: menuList = {
+        event.preventDefault();
+        const storedData = localStorage.getItem("menus");
+        const menus: MenuList[] = storedData ? JSON.parse(storedData) : [];
+        const payload: MenuList = {
             id: String(Math.floor(100000 + Math.random() * 900000)),
-            name: newMenu
-        }
-        menus.push(payload)
-        localStorage.setItem('menus', JSON.stringify(menus))
+            name: newMenu,
+        };
+        menus.unshift(payload);
+        localStorage.setItem("menus", JSON.stringify(menus));
+        fetchMenus();
+        setNewMenu("")
+    };
+
+    const deleteMenu = (id: string) => {
+        const filteredMenu = menuList.filter(menu => menu.id !== id)
+        localStorage.setItem("menus", JSON.stringify(filteredMenu))
+        fetchMenus();
     }
 
     useEffect(() => {
-        setLocalStorage()
-    }, [menuList])
+        fetchMenus();
+    }, []);
 
     return (
         <div className="px-6 space-y-5 w-[650px]">
@@ -69,7 +70,8 @@ export default function CardSandbox() {
                                         onChange={inputHandler}
                                     />
                                     <button
-                                        className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-[120px]"
+                                        disabled={!newMenu}
+                                        className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-[120px] bg-black text-white"
                                         onClick={newMenuSubmitted}
                                     >
                                         Tambah
@@ -95,7 +97,7 @@ export default function CardSandbox() {
                                 </thead>
                                 <tbody className="[&amp;_tr:last-child]:border-0">
                                     {menuList.map(menu => (
-                                        <MenuList key={menu.id} id={menu.id} name={menu.name} />
+                                        <MenuList key={menu.id} id={menu.id} name={menu.name} deleteMenu={deleteMenu}/>
                                     ))}
                                 </tbody>
                             </table>
