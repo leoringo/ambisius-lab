@@ -1,8 +1,23 @@
-import { createContext } from "react";
+import { createContext, useState } from "react";
 import { menuDummy } from "@/services/menuService";
 
-const menuContext = createContext(menuDummy)
+interface MenuList {
+    id: string;
+    name: string;
+}
 
-export default function MenuProvider() {
-    const [menu, setMenu] = useState
+interface MenuContext {
+    menuList: MenuList[];
+    setMenuList: (value: MenuList[]) => void;
+}
+
+export const menuContext = createContext<MenuContext | undefined >(undefined)
+
+export default function MenuProvider({ children }: { children: React.ReactNode }) {
+    const [menuList, setMenuList] = useState<MenuList[]>(menuDummy)
+    return (
+        <menuContext.Provider value={{ menuList, setMenuList }}>
+            {children}
+        </menuContext.Provider>
+    )
 }

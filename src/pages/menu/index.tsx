@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { resetMenu } from "@/services/menuService";
+import { menuContext } from "@/providers/MenuProvider";
 import MenuList from "@/components/MenuList";
 
 interface MenuList {
@@ -9,7 +10,7 @@ interface MenuList {
 
 export default function MenuTable() {
     const [newMenu, setNewMenu] = useState<string>("");
-    const [menuList, setMenuList] = useState<MenuList[]>([]);
+    const {menuList, setMenuList} = useContext(menuContext);
 
     const fetchMenus = () => {
         if (!localStorage.getItem("menus")) {
