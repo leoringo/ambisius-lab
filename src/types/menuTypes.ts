@@ -6,4 +6,5 @@ export interface TMenuList {
 export interface TMenuContext {
     menuList?: TMenuList[];
     setMenuList?: (value: TMenuList[]) => void;
+    fetchMenus?: () => void
 }

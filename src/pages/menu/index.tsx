@@ -7,12 +7,7 @@ import MenuList from "@/components/MenuList";
 
 export default function MenuTable() {
     const [newMenu, setNewMenu] = useState<string>("");
-    const { menuList, setMenuList } = useContext(menuContext);
-
-    const fetchMenus = () => {
-        const menus = getLocalStorageMenu()
-        setMenuList?.(menus);
-    };
+    const { menuList, fetchMenus } = useContext(menuContext);
 
     const inputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNewMenu(event.target.value);
@@ -28,19 +23,15 @@ export default function MenuTable() {
         };
         menus.unshift(payload);
         localStorage.setItem("menus", JSON.stringify(menus));
-        fetchMenus();
+        fetchMenus?.();
         setNewMenu("")
     };
 
     const deleteMenu = (id: string) => {
         const filteredMenu = menuList?.filter(menu => menu.id !== id)
         localStorage.setItem("menus", JSON.stringify(filteredMenu))
-        fetchMenus();
+        fetchMenus?.();
     }
-
-    useEffect(() => {
-        fetchMenus();
-    }, []);
 
     return (
         <div className="px-6 space-y-5 w-[650px]">
@@ -75,7 +66,7 @@ export default function MenuTable() {
                         </div>
                         <div className="w-full overflow-auto">
                             <table className="w-full caption-bottom text-sm">
-                                <caption className="mt-4 text-sm text-muted-foreground">Daftar menu restoran Anda</caption>
+                                <caption className="mt-4 text-sm text-muted-foreground text-gray-500">Daftar menu restoran Anda</caption>
                                 <thead className="[&amp;_tr]:border-b">
                                     <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                                         <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-[100px]">
@@ -90,6 +81,7 @@ export default function MenuTable() {
                                     </tr>
                                 </thead>
                                 <tbody className="[&amp;_tr:last-child]:border-0">
+                                    {/* --------- Mapping for Menu's List --------- */}
                                     {menuList?.map(menu => (
                                         <MenuList key={menu.id} id={menu.id} name={menu.name} deleteMenu={deleteMenu} />
                                     ))}
@@ -99,7 +91,7 @@ export default function MenuTable() {
                     </section>
                 </div>
             </div>
-            <p className="text-sm text-muted-foreground text-center">
+            <p className="text-sm text-muted-foreground text-center text-gray-500">
                 Semua data hanya disimpan di Local Storage browser Anda
             </p>
         </div>
