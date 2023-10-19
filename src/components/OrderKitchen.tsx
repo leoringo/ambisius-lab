@@ -1,26 +1,13 @@
-import { TMenuList } from "@/types/menuTypes";
-import { TOrder } from "@/types/orderTypes";
-
-interface TOrderKitchen {
-  menuList?: TMenuList[];
-  orderList?: TOrder[];
-  table: number;
-}
+import { orderContext } from "@/providers/OrderProvider";
+import { TOrderKitchen } from "@/types/orderTypes";
+import { useContext } from "react";
 
 export default function OrderKitchen({
   menuList,
   orderList,
   table,
 }: TOrderKitchen) {
-  function mergeMenuWithOrders(menuItems: TMenuList[], orders: TOrder[]) {
-    for (const order of orders) {
-      const menuMatch = menuItems.find((item) => item.id === order.menuId);
-      if (menuMatch) {
-        order.menu = menuMatch.name;
-      }
-    }
-    return orders;
-  }
+  const { mergeMenuWithOrders } = useContext(orderContext);
 
   return (
     <div className="w-1/3 space-y-4">
@@ -28,7 +15,7 @@ export default function OrderKitchen({
       <div className="space-y-1">
         {menuList &&
           orderList &&
-          mergeMenuWithOrders(menuList, orderList)?.map((order) => {
+          mergeMenuWithOrders?.().map((order) => {
             if (+order.tableId === table) {
               return (
                 <div

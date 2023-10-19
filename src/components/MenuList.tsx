@@ -24,9 +24,9 @@ export default function MenuList({
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                         className="text-red-300 hover:text-red-500 cursor-pointer"
                     >
                         <path d="M3 6h18"></path>

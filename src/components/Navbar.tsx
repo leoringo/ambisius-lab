@@ -4,14 +4,17 @@ import { useRouter } from "next/router";
 import { menuDummy, initialFetch } from "@/services/menuService";
 import { useContext } from "react";
 import { menuContext } from "@/providers/MenuProvider";
+import { orderContext } from "@/providers/OrderProvider";
 
 const Navbar: React.FC = () => {
   const router = useRouter();
   const { setMenuList } = useContext(menuContext);
+  const { setOrderList } = useContext(orderContext);
 
   const handleReset = () => {
     initialFetch();
     setMenuList?.(menuDummy);
+    setOrderList?.([]);
   };
 
   const isActive = (pathname: string) => {
