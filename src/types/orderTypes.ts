@@ -2,7 +2,8 @@ export interface TOrder {
     id: string;
     tableId: string;
     menuId: string;
-    quantity: number
+    quantity: number;
+    menu?: string;
 }
 
 export interface TOrderContext {

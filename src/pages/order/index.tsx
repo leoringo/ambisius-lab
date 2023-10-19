@@ -128,9 +128,6 @@ export default function OrderSystem() {
           </section>
         </div>
       </div>
-      <p className="text-sm text-muted-foreground text-center text-gray-500">
-        Semua data hanya disimpan di Local Storage browser Anda
-      </p>
     </main>
   );
 }

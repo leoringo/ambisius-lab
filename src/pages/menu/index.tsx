@@ -14,7 +14,7 @@ export default function MenuTable() {
 
   const newMenuSubmitted = (event: any) => {
     event.preventDefault();
-    const menus = getLocalStorageMenu()
+    const menus = getLocalStorageMenu();
     const payload: TMenuList = {
       id: String(Math.floor(100000 + Math.random() * 900000)),
       name: newMenu,
@@ -96,9 +96,6 @@ export default function MenuTable() {
           </section>
         </div>
       </div>
-      <p className="text-sm text-muted-foreground text-center text-gray-500">
-        Semua data hanya disimpan di Local Storage browser Anda
-      </p>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import Navbar from "@/components/Navbar";
 import MenuProvider from "@/providers/MenuProvider";
 import OrderProvider from "@/providers/OrderProvider";
+import StorageNotification from "@/components/StorageNotification";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -14,6 +15,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <Component {...pageProps} />
         </OrderProvider>
       </MenuProvider>
+      <StorageNotification />
     </>
   );
 }
