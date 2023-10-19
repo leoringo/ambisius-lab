@@ -83,16 +83,15 @@ export default function OrderSystem() {
                 </label>
 
                 <select
+                  value={selectedMenu}
                   onChange={handleMenuChange}
                   className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-muted-foreground"
                 >
-                  <option disabled selected={!selectedMenu}>
-                    Pilih menu
-                  </option>
+                  <option value="">Pilih menu</option>
                   {/*---------- Mapping for Menu ----------*/}
                   {menuList?.map((el) => (
                     <option key={el.id} value={el.id}>
-                      <span>&#10003;</span>
+                      &#10003;
                       {el.name}
                     </option>
                   ))}
@@ -103,13 +102,12 @@ export default function OrderSystem() {
                   Jumlah
                 </label>
                 <select
+                  value={quantity}
                   onChange={handleQuantityChange}
                   className="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-[140px] text-muted-foreground background-image"
                 >
                   {/*---------- Options for Quantity ----------*/}
-                  <option disabled selected={quantity === 0}>
-                    Kuantitas
-                  </option>
+                  <option value={0}>Kuantitas</option>
                   <option value={1}>1</option>
                   <option value={2}>2</option>
                   <option value={3}>3</option>

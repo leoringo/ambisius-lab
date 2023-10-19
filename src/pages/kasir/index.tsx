@@ -4,13 +4,27 @@ import { useContext, useEffect, useState } from "react";
 
 export default function Cashier() {
   const { mergeMenuWithOrders } = useContext(orderContext);
+  const { orderList, setOrderList } = useContext(orderContext);
   const [tableDropdown, setTableDropdown] = useState<number[]>([]);
   const [pickedTable, setPickedTable] = useState<number>(0);
-  const [print, setPrinted] = useState<number>(0);
+  const [print, setPrint] = useState<number>(0);
   const orders = mergeMenuWithOrders?.();
 
   const handleOnchange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    if (event.target.value === "0") {
+      setPrint(0);
+    }
     setPickedTable(+event.target.value);
+  };
+
+  const checkOut = () => {
+    const filteredTableAfterCheckOut: any = orderList?.filter(
+      (order) => +order.tableId !== pickedTable
+    );
+    localStorage.setItem("orders", JSON.stringify(filteredTableAfterCheckOut));
+    setOrderList?.(filteredTableAfterCheckOut);
+    setPrint(0);
+    setPickedTable(0);
   };
 
   const filteredNumberDropdown = () => {
@@ -53,7 +67,7 @@ export default function Cashier() {
                   </select>
                   <button
                     onClick={() =>
-                      print !== pickedTable && setPrinted(pickedTable)
+                      print !== pickedTable && setPrint(pickedTable)
                     }
                     className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-black hover:opacity-[0.85] text-white h-10 px-4 py-2"
                     disabled={pickedTable === 0}
@@ -61,7 +75,12 @@ export default function Cashier() {
                     Print struk
                   </button>
                 </div>
-                <button className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-destructive text-destructive-foreground hover:bg-destructive/90 h-10 px-4 py-2">
+                <button
+                  onClick={checkOut}
+                  className={`inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-red-500 text-white hover:opacity-[90%] text-destructive-foreground h-10 px-4 py-2 ${
+                    pickedTable === 0 && "hidden"
+                  }`}
+                >
                   Kosongkan meja
                 </button>
               </div>
@@ -87,17 +106,26 @@ export default function Cashier() {
                       </tr>
                     </thead>
                     <tbody className="[&amp;_tr:last-child]:border-0">
-                      <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium text-right">
-                          1
-                        </td>
-                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                          Ayam Kecap Manis
-                        </td>
-                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                          Gratis
-                        </td>
-                      </tr>
+                      {orders?.map((order) => {
+                        if (+order.tableId === print) {
+                          return (
+                            <tr
+                              className="border-b transition-colors h-14"
+                              key={order.id}
+                            >
+                              <td className="px-4 align-middle text-right text-sm">
+                                {order.quantity}
+                              </td>
+                              <td className="px-4 align-middle text-left text-sm">
+                                {order.menu}
+                              </td>
+                              <td className="px-4 align-middle text-left text-sm">
+                                Gratis
+                              </td>
+                            </tr>
+                          );
+                        }
+                      })}
                     </tbody>
                   </table>
                 )}
