@@ -1,12 +1,14 @@
 import React, { useContext, useMemo, useState } from "react";
 import { menuContext } from "@/providers/MenuProvider";
 import Checklist from "@/assets/Checklist";
+import { orderContext } from "@/providers/OrderProvider";
 
 export default function OrderSystem() {
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [selectedMenu, setSelectedMenu] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(0);
   const { menuList } = useContext(menuContext);
+  const { fetchOrders } = useContext(orderContext);
 
   const handleTabClick = (tab: number) => {
     setSelectedTab(tab);
@@ -38,6 +40,8 @@ export default function OrderSystem() {
       orders.push(payload);
       localStorage.setItem("orders", JSON.stringify(orders));
     }
+
+    fetchOrders?.();
     setSelectedTab(0);
     setSelectedMenu("");
     setQuantity(0);
@@ -75,7 +79,6 @@ export default function OrderSystem() {
             <div className="flex space-x-2">
               <div className="space-y-1 w-full">
                 <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                <Checklist />
                   Menu
                 </label>
 
@@ -89,6 +92,7 @@ export default function OrderSystem() {
                   </option>
                   {menuList?.map((el) => (
                     <option key={el.id} value={el.id}>
+                      <span>&#10003;</span>
                       {el.name}
                     </option>
                   ))}
