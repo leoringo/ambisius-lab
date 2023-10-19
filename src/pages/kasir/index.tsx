@@ -6,23 +6,27 @@ export default function Cashier() {
   const { mergeMenuWithOrders } = useContext(orderContext);
   const [tableDropdown, setTableDropdown] = useState<number[]>([]);
   const [pickedTable, setPickedTable] = useState<number>(0);
+  const [print, setPrinted] = useState<number>(0);
+  const orders = mergeMenuWithOrders?.();
 
-  const handleOnchange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOnchange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setPickedTable(+event.target.value);
   };
 
   const filteredNumberDropdown = () => {
     const tableNumber: number[] = [];
     const number: Set<number> = new Set();
-    mergeMenuWithOrders?.().forEach((order) => number.add(+order.tableId));
+    orders?.forEach((order) => number.add(+order.tableId));
     number.forEach((num) => tableNumber.push(num));
 
     setTableDropdown(tableNumber);
   };
 
   useEffect(() => {
-    filteredNumberDropdown();
-  }, []);
+    if (orders) {
+      filteredNumberDropdown();
+    }
+  }, [orders]);
 
   return (
     <main className="px-6 space-y-5 w-[650px]">
@@ -36,19 +40,24 @@ export default function Cashier() {
               <div className="flex items-center justify-between">
                 <div className="flex space-x-2">
                   <select
-                    onChange={() => handleOnchange}
+                    defaultValue={0}
+                    onChange={handleOnchange}
                     className="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-[180px]"
                   >
-                    <option value={0} disabled selected>
-                      Nomor meja
-                    </option>
+                    <option value={0}>Nomor meja</option>
                     {tableDropdown.map((tableNumber) => (
                       <option key={tableNumber} value={tableNumber}>
                         {tableNumber}
                       </option>
                     ))}
                   </select>
-                  <button className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                  <button
+                    onClick={() =>
+                      print !== pickedTable && setPrinted(pickedTable)
+                    }
+                    className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-black hover:opacity-[0.85] text-white h-10 px-4 py-2"
+                    disabled={pickedTable === 0}
+                  >
                     Print struk
                   </button>
                 </div>
@@ -59,70 +68,39 @@ export default function Cashier() {
             </div>
             <div className="space-y-3">
               <div className="w-full overflow-auto">
-                <table className="w-full caption-bottom text-sm">
-                  <caption className="mt-4 text-sm text-muted-foreground text-gray-500">
-                    Terima kasih sudah makan di <b>Restoran</b>
-                  </caption>
-                  <thead className="[&amp;_tr]:border-b">
-                    <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                      <th className="h-12 px-4 align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 text-right w-[100px]">
-                        Jumlah
-                      </th>
-                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                        Menu
-                      </th>
-                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-[100px]">
-                        Harga
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="[&amp;_tr:last-child]:border-0">
-                    <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                      <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium text-right">
-                        1
-                      </td>
-                      <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                        Ayam Kecap Manis
-                      </td>
-                      <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                        Gratis
-                      </td>
-                    </tr>
-                    <tr className="border-b transition-colors hover.bg-muted/50 data-[state=selected]:bg-muted">
-                      <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium text-right">
-                        1
-                      </td>
-                      <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                        Ayam Kecap Manis
-                      </td>
-                      <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                        Gratis
-                      </td>
-                    </tr>
-                    <tr className="border-b transition-colors hover.bg-muted/50 data-[state=selected]:bg-muted">
-                      <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium text-right">
-                        2
-                      </td>
-                      <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                        Nasi Goreng Spesial
-                      </td>
-                      <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                        Gratis
-                      </td>
-                    </tr>
-                    <tr className="border-b transition-colors hover.bg-muted/50 data-[state=selected]:bg-muted">
-                      <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium text-right">
-                        1
-                      </td>
-                      <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                        Ayam Kecap Manis
-                      </td>
-                      <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                        Gratis
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                {print !== 0 && (
+                  <table className="w-full caption-bottom text-sm">
+                    <caption className="mt-4 text-sm text-muted-foreground text-gray-500">
+                      Terima kasih sudah makan di <b>Restoran</b>
+                    </caption>
+                    <thead className="[&amp;_tr]:border-b">
+                      <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                        <th className="h-12 px-4 align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 text-right w-[100px]">
+                          Jumlah
+                        </th>
+                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
+                          Menu
+                        </th>
+                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-[100px]">
+                          Harga
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="[&amp;_tr:last-child]:border-0">
+                      <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium text-right">
+                          1
+                        </td>
+                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                          Ayam Kecap Manis
+                        </td>
+                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                          Gratis
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                )}
               </div>
             </div>
           </section>
