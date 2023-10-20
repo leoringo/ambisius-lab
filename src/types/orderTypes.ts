@@ -18,5 +18,4 @@ export interface TOrderContext {
   orderList?: TOrder[];
   setOrderList?: (value: TOrder[]) => void;
   fetchOrders?: () => void;
-  mergeMenuWithOrders?: () => TOrder[];
 }

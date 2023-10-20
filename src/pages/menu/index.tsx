@@ -2,7 +2,11 @@ import { useContext, useState } from "react";
 import { menuContext } from "@/providers/MenuProvider";
 import { TMenuList } from "@/types/menuTypes";
 import MenuList from "@/components/MenuList";
-import { getLocalStorageMenu } from "@/services/menuService";
+import {
+  addLocalStorageMenu,
+  getLocalStorageMenu,
+  removeLocalStorageMenu,
+} from "@/services/menuService";
 
 export default function MenuTable() {
   const [newMenu, setNewMenu] = useState<string>("");
@@ -14,20 +18,13 @@ export default function MenuTable() {
 
   const newMenuSubmitted = (event: any) => {
     event.preventDefault();
-    const menus = getLocalStorageMenu();
-    const payload: TMenuList = {
-      id: String(Math.floor(100000 + Math.random() * 900000)),
-      name: newMenu,
-    };
-    menus.unshift(payload);
-    localStorage.setItem("menus", JSON.stringify(menus));
+    addLocalStorageMenu(newMenu);
     fetchMenus?.();
     setNewMenu("");
   };
 
   const deleteMenu = (id: string) => {
-    const filteredMenu = menuList?.filter((menu) => menu.id !== id);
-    localStorage.setItem("menus", JSON.stringify(filteredMenu));
+    removeLocalStorageMenu(menuList, id);
     fetchMenus?.();
   };
 
@@ -46,7 +43,7 @@ export default function MenuTable() {
                 </label>
                 <div className="flex space-x-2">
                   <input
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                     id="menu"
                     placeholder="Tambahkan disini..."
                     value={newMenu}
@@ -54,7 +51,7 @@ export default function MenuTable() {
                   />
                   <button
                     disabled={!newMenu}
-                    className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:opacity-[0.85] h-10 px-4 py-2 w-[120px] bg-black text-white"
+                    className="inline-flex items-center justify-center rounded-md text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:opacity-[0.85] h-10 px-4 py-2 w-[120px] bg-black text-white"
                     onClick={newMenuSubmitted}
                   >
                     Tambah
@@ -64,23 +61,23 @@ export default function MenuTable() {
             </div>
             <div className="w-full overflow-auto">
               <table className="w-full caption-bottom text-sm">
-                <caption className="mt-4 text-sm text-muted-foreground text-gray-500">
+                <caption className="mt-4 text-sm text-gray-500">
                   Daftar menu restoran Anda
                 </caption>
-                <thead className="[&amp;_tr]:border-b">
-                  <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                    <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-[100px]">
+                <thead>
+                  <tr className="border-b">
+                    <th className="h-12 px-4 text-left align-middle font-medium w-[100px]">
                       ID
                     </th>
-                    <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
+                    <th className="h-12 px-4 text-left align-middle font-medium">
                       Menu
                     </th>
-                    <th className="h-12 px-4 align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 text-right">
+                    <th className="h-12 px-4 align-middle font-medium text-right">
                       Hapus?
                     </th>
                   </tr>
                 </thead>
-                <tbody className="[&amp;_tr:last-child]:border-0">
+                <tbody>
                   {/* --------- Mapping for Menu's List --------- */}
                   {menuList?.map((menu) => (
                     <MenuList

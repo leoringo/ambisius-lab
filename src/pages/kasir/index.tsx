@@ -1,14 +1,16 @@
+import { menuContext } from "@/providers/MenuProvider";
 import { orderContext } from "@/providers/OrderProvider";
-import { TOrder } from "@/types/orderTypes";
+import { filteredTableAfterCheckOut } from "@/services/cashierService";
+import { mergeMenuWithOrders } from "@/services/orderService";
 import { useContext, useEffect, useState } from "react";
 
 export default function Cashier() {
-  const { mergeMenuWithOrders } = useContext(orderContext);
   const { orderList, setOrderList } = useContext(orderContext);
+  const { menuList } = useContext(menuContext);
   const [tableDropdown, setTableDropdown] = useState<number[]>([]);
   const [pickedTable, setPickedTable] = useState<number>(0);
   const [print, setPrint] = useState<number>(0);
-  const orders = mergeMenuWithOrders?.();
+  const orders = mergeMenuWithOrders(menuList, orderList);
 
   const handleOnchange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     if (event.target.value === "0") {
@@ -18,11 +20,7 @@ export default function Cashier() {
   };
 
   const checkOut = () => {
-    const filteredTableAfterCheckOut: any = orderList?.filter(
-      (order) => +order.tableId !== pickedTable
-    );
-    localStorage.setItem("orders", JSON.stringify(filteredTableAfterCheckOut));
-    setOrderList?.(filteredTableAfterCheckOut);
+    setOrderList?.(filteredTableAfterCheckOut(orderList, pickedTable));
     setPrint(0);
     setPickedTable(0);
   };
@@ -58,7 +56,9 @@ export default function Cashier() {
                     onChange={handleOnchange}
                     className="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-[180px]"
                   >
-                    <option value={0}>Nomor meja</option>
+                    <option className="bg-gray-100" value={0}>
+                      Nomor meja
+                    </option>
                     {tableDropdown.map((tableNumber) => (
                       <option key={tableNumber} value={tableNumber}>
                         {tableNumber}

@@ -2,27 +2,36 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { menuDummy, initialFetch } from "@/services/menuService";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { menuContext } from "@/providers/MenuProvider";
 import { orderContext } from "@/providers/OrderProvider";
 
 const Navbar: React.FC = () => {
   const router = useRouter();
+  const [isReset, setIsReset] = useState<boolean>(false);
   const { setMenuList } = useContext(menuContext);
   const { setOrderList } = useContext(orderContext);
+
+  const resetNotificationHandler = () => {
+    setIsReset(true);
+    setTimeout(() => {
+      setIsReset(false);
+    }, 2000);
+  };
 
   const handleReset = () => {
     initialFetch();
     setMenuList?.(menuDummy);
     setOrderList?.([]);
+    resetNotificationHandler();
   };
 
   const isActive = (pathname: string) => {
     //-------- Style for navigation --------
     const notActiveTab =
-      "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-[#7e8fa9] min-h-[35px] min-w-[100px]";
+      "inline-flex items-center justify-center rounded-sm px-3 py-1.5 text-sm font-medium text-[#7e8fa9] min-h-[35px] min-w-[100px] hover:opacity-70";
     const activeTab =
-      "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-white text-black shadow min-h-[25px] min-w-[100px]";
+      "inline-flex items-center justify-center rounded-md px-3 py-1.5 text-sm font-medium bg-white text-black shadow min-h-[25px] min-w-[100px] hover:opacity-70";
 
     return router.pathname === pathname ? activeTab : notActiveTab;
   };
@@ -32,9 +41,7 @@ const Navbar: React.FC = () => {
       <div className="flex items-center justify-between">
         <div className="space-y-1">
           <h1 className="text-3xl font-semibold">[Contoh] Sistem Restoran</h1>
-          <p className="text-muted-foreground text-sm">
-            Ambisius Coding Challenge #230916H
-          </p>
+          <p className="text-sm">Ambisius Coding Challenge #230916H</p>
         </div>
         <button
           type="button"
@@ -77,29 +84,38 @@ const Navbar: React.FC = () => {
             Kasir
           </Link>
         </div>
-        <button
-          onClick={handleReset}
-          className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-[100px]"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="mr-2"
+        <div className="flex justify-center">
+          <div
+            className={`absolute bg-green-600 text-white px-5 py-2 top-[60px] rounded-md transition-opacity ease-in duration-700 ${
+              isReset ? "opacity-100" : "opacity-0"
+            }`}
           >
-            <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-            <path d="M3 3v5h5"></path>
-            <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
-            <path d="M16 16h5v5"></path>
-          </svg>
-          Reset
-        </button>
+            <h1>&#10003; Data telah direset ulang</h1>
+          </div>
+          <button
+            onClick={handleReset}
+            className="inline-flex items-center justify-center rounded-md text-sm font-medium disabled:pointer-events-none disabled:opacity-50 border border-gray-300 h-10 px-4 py-2 w-[100px] hover:opacity-70"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="mr-2"
+            >
+              <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+              <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
+              <path d="M16 16h5v5"></path>
+            </svg>
+            Reset
+          </button>
+        </div>
       </div>
     </main>
   );
