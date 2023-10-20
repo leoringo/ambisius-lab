@@ -12,7 +12,7 @@ export default function OrderKitchen({
       <div className="space-y-1">
         {menuList &&
           orderList &&
-          mergeMenuWithOrders(menuList, orderList).map((order) => {
+          mergeMenuWithOrders(menuList, orderList)?.map((order) => {
             if (+order.tableId === table) {
               return (
                 <div
