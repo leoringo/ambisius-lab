@@ -16,7 +16,7 @@ export default function MenuProvider({
   const [menuList, setMenuList] = useState<TMenuList[]>([]);
   const fetchMenus = () => {
     const menus = getLocalStorageMenu();
-    setMenuList?.(menus);
+    setMenuList(menus);
   };
 
   useEffect(() => {

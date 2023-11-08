@@ -1,10 +1,8 @@
 import { useContext, useState } from "react";
 import { menuContext } from "@/providers/MenuProvider";
-import { TMenuList } from "@/types/menuTypes";
 import MenuList from "@/components/MenuList";
 import {
   addLocalStorageMenu,
-  getLocalStorageMenu,
   removeLocalStorageMenu,
 } from "@/services/menuService";
 

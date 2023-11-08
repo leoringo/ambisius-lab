@@ -40,8 +40,8 @@ const Navbar: React.FC = () => {
     <main className="p-6 space-y-5 w-[650px]">
       <div className="flex items-center justify-between">
         <div className="space-y-1">
-          <h1 className="text-3xl font-semibold">[Contoh] Sistem Restoran</h1>
-          <p className="text-sm">Ambisius Coding Challenge #230916H</p>
+          <h1 className="text-3xl font-semibold">Sistem Restoran</h1>
+          <p className="text-sm">Welcome to the Restaurant!</p>
         </div>
         <button
           type="button"
